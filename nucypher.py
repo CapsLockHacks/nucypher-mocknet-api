@@ -65,7 +65,7 @@ class MockNetwork(object):
         cfrags = []
 
         # TODO: using web3py check if is dead?
-        data = requests.get("http://172.16.21.223:3000/api/platform/isAlive/")
+        data = requests.get("http://172.16.21.223:3000/api/platform/isAlive/"+str(policy_id))
         res = json.loads(data.text)
         if bool(res["result"]) == True:
             m_kfrags = random.sample(kfrags, M)
