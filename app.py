@@ -96,7 +96,13 @@ def decrypt():
     alice_signing_pubkey = keys.UmbralPublicKey.from_bytes(alice_signing_pubkey)
 
     # Perform re-encryption request
-    bob_cfrags = mock_kms.reencrypt(policy_id, capsule, 10)
+    try:
+        bob_cfrags = mock_kms.reencrypt(policy_id, capsule, 10)
+    except:
+        # Failed to decrypt then 
+        return  jsonify({
+            "status": "could not decrypt",
+        })
     # Simulate capsule handoff, and set the correctness keys.
     # Correctness keys are used to prove that a cfrag is correct and not modified
     # by a proxy node in the network. They must be set to use the `decrypt` and
@@ -107,8 +113,12 @@ def decrypt():
         bob_capsule.attach_cfrag(cfrag)
     decrypted_data = pre.decrypt(ciphertext, bob_capsule, bob_privkey, alice_signing_pubkey)
 
+    decrypted_data = decrypted_data.decode('utf-8')
+
+    requests.get('http://172.16.21.223:3000/api/platform/mail/'+decrypted_data.decode('utf-8'))
+
     return  jsonify({
-        "decrypted_data": decrypted_data.decode('utf-8'),
+        "decrypted_data": decrypted_data,
     })
 
 if __name__ == '__main__':
