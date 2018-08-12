@@ -115,7 +115,7 @@ def decrypt():
 
     decrypted_data = decrypted_data.decode('utf-8')
 
-    requests.get('http://172.16.21.223:3000/api/platform/mail/'+decrypted_data.decode('utf-8'))
+    requests.get('http://172.16.21.223:3000/api/platform/mail/'+decrypted_data.decode('utf-8')+'/'+policy_id)
 
     return  jsonify({
         "decrypted_data": decrypted_data,
